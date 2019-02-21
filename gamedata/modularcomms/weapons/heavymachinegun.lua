@@ -10,8 +10,8 @@ local weaponDef = {
 
 	customParams            = {
 		slot = [[5]],
-		muzzleEffectShot = [[custom:WARMUZZLE]],
-		miscEffectShot = [[custom:DEVA_SHELLS]],
+		muzzleEffectShot = [[WARMUZZLE]],
+		miscEffectShot = [[DEVA_SHELLS]],
 		altforms = {
 			lime = {
 				explosionGenerator = [[custom:BEAMWEAPON_HIT_GREEN]],

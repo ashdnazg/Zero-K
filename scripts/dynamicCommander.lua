@@ -155,11 +155,11 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 	local weaponDef1 = weaponName1 and unitWeaponNames[weaponName1]
 	local weaponDef2 = weaponName2 and unitWeaponNames[weaponName2]
 	local shieldDef = shieldName and unitWeaponNames[shieldName]
-	
+
 	weapon1 = weaponDef1 and weaponDef1.num
 	weapon2 = weaponDef2 and (weaponDef2.num2 or weaponDef2.num)
 	shield  = shieldDef and shieldDef.num
-	
+
 	if weapon1 then
 		Spring.SetUnitRulesParam(unitID, "comm_weapon_name_1", weaponName1, INLOS)
 		Spring.SetUnitRulesParam(unitID, "comm_weapon_id_1", (weaponDef1 and weaponDef1.weaponDefID) or 0, INLOS)
@@ -167,7 +167,7 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 		Spring.SetUnitRulesParam(unitID, "comm_weapon_manual_1", (weaponDef1 and weaponDef1.manualFire and 1) or 0, INLOS)
 		weaponCegs[1] = GetCegTable(WeaponDefs[weaponDef1.weaponDefID])
 	end
-	
+
 	if weapon2 then
 		Spring.SetUnitRulesParam(unitID, "comm_weapon_name_2", weaponName2, INLOS)
 		Spring.SetUnitRulesParam(unitID, "comm_weapon_id_2", (weaponDef2 and weaponDef2.weaponDefID) or 0, INLOS)
@@ -184,7 +184,7 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 	else
 		Spring.SetUnitRulesParam(unitID, "comm_shield_max", 0, INLOS)
 	end
-	
+
 	weaponNumMap = {}
 	if weapon1 then
 		weaponNumMap[weapon1] = 1
@@ -195,7 +195,7 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 	if shield then
 		weaponNumMap[shield] = 3
 	end
-	
+
 	local hasManualFire = (weaponDef1 and weaponDef1.manualFire) or (weaponDef2 and weaponDef2.manualFire)
 	local cmdDesc = Spring.FindUnitCmdDesc(unitID, CMD.MANUALFIRE)
 	if not hasManualFire and cmdDesc then
@@ -217,7 +217,7 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 		end
 		Spring.SetUnitWeaponState(unitID, weapon1, "range", range)
 		Spring.SetUnitWeaponDamages(unitID, weapon1, "dynDamageRange", range)
-		
+
 		local damages = WeaponDefs[weaponDef1.weaponDefID].damages
 		for k, v in pairs(damages) do
 			if type(k) == "number" then
@@ -225,7 +225,7 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 			end
 		end
 	end
-	
+
 	if weapon2 then
 		isManual[weapon2] = weaponDef2.manualFire
 		local range = tonumber(WeaponDefs[weaponDef2.weaponDefID].range)*rangeMult
@@ -243,7 +243,7 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 		end
 		Spring.SetUnitWeaponState(unitID, weapon2, "range", range)
 		Spring.SetUnitWeaponDamages(unitID, weapon2, "dynDamageRange", range)
-		
+
 		local damages = WeaponDefs[weaponDef2.weaponDefID].damages
 		for k, v in pairs(damages) do
 			if type(k) == "number" then
@@ -251,7 +251,7 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 			end
 		end
 	end
-	
+
 	if weapon1 then
 		if weapon2 then
 			local reload1 = Spring.GetUnitWeaponState(unitID, weapon1, 'reloadTime')
@@ -261,7 +261,7 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 			else
 				Spring.SetUnitRulesParam(unitID, "primary_weapon_override",  weapon2, INLOS)
 			end
-			
+
 			local range1 = Spring.GetUnitWeaponState(unitID, weapon1, 'range')
 			local range2 = Spring.GetUnitWeaponState(unitID, weapon2, 'range')
 			if range1 > range2 then
@@ -274,7 +274,7 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 			Spring.SetUnitRulesParam(unitID, "primary_weapon_range",  weapon1, INLOS)
 		end
 	end
-	
+
 	-- Set other ranges to 0 for leashing
 	if weapon1 ~= 1 and weapon2 ~= 1 then
 		Spring.SetUnitWeaponState(unitID, 1, "range", maxRange)
@@ -285,22 +285,22 @@ local function UpdateWeapons(weaponName1, weaponName2, shieldName, rangeMult, da
 		end
 	end
 	Spring.SetUnitMaxRange(unitID, maxRange)
-	
+
 	Spring.SetUnitRulesParam(unitID, "sightRangeOverride", math.max(500, math.min(600, maxRange*1.1)), INLOS)
-	
+
 	if otherRange then
 		Spring.SetUnitRulesParam(unitID, "secondary_range", otherRange, INLOS)
 	end
-	
+
 	-- shields
 	for i = 1, #shields do
 		--Spring.SetUnitShieldState(unitID, shields[i], false)
 	end
-	
+
 	if (shield) then
 		Spring.SetUnitShieldState(unitID, shield, true)
 	end
-	
+
 	weaponsInitialized = true
 end
 
@@ -308,7 +308,7 @@ local function Create()
 	-- copy the dgun command table because we sometimes need to reinsert it
 	local cmdID = Spring.FindUnitCmdDesc(unitID, CMD.MANUALFIRE)
 	dgunTable = Spring.GetUnitCmdDescs(unitID, cmdID)[1]
-	
+
 	if Spring.GetUnitRulesParam(unitID, "comm_weapon_id_1") then
 		UpdateWeapons(
 			Spring.GetUnitRulesParam(unitID, "comm_weapon_name_1"),
@@ -328,14 +328,14 @@ local function SpawnModuleWreck(moduleDefID, wreckLevel, totalCount, teamID, x, 
 		return
 	end
 	featureDefID = featureDefID.id
-	
+
 	local dir = math.random()*2*math.pi
 	local pitch = ((math.random()*2)^2 - 1)*math.pi/2
 	local heading = math.random(65536)
 	local mag = 60 + math.random()*(30 + 5*math.min(totalCount, 15))
 	local horScale = mag*math.cos(pitch)
 	vx, vy, vz = vx + math.cos(dir)*horScale, vy + math.sin(pitch)*mag, vz + math.sin(dir)*horScale
-	
+
 	local featureID = Spring.CreateFeature(featureDefID, x + vx, y, z + vz, heading, teamID)
 end
 
@@ -343,7 +343,7 @@ local function SpawnModuleWrecks(wreckLevel)
 	local x, y, z, mx, my, mz = Spring.GetUnitPosition(unitID, true)
 	local vx, vy, vz = Spring.GetUnitVelocity(unitID)
 	local teamID	= Spring.GetUnitTeam(unitID)
-	
+
 	local moduleCount = Spring.GetUnitRulesParam(unitID, "comm_module_count") or 0;
 	for i = 1, moduleCount do
 		SpawnModuleWreck(Spring.GetUnitRulesParam(unitID, "comm_module_" .. i), wreckLevel, moduleCount, teamID, x, y, z, vx, vy, vz)
@@ -353,11 +353,11 @@ end
 local function SpawnWreck(wreckLevel)
 	local makeRezzable = (wreckLevel == 1)
 	local wreckDef = FeatureDefs[Spring.GetUnitRulesParam(unitID, commWreckUnitRulesParam[wreckLevel])]
-	
+
 	local x, y, z = Spring.GetUnitPosition(unitID)
-	
+
 	local vx, vy, vz = Spring.GetUnitVelocity(unitID)
-	
+
 	if (wreckDef) then
 		local heading   = Spring.GetUnitHeading(unitID)
 		local teamID	= Spring.GetUnitTeam(unitID)
@@ -381,4 +381,4 @@ return {
 	Create            = Create,
 	SpawnModuleWrecks = SpawnModuleWrecks,
 	SpawnWreck        = SpawnWreck,
-}	
+}

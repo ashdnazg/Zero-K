@@ -8,7 +8,7 @@ local weaponDef = {
 
 	customParams            = {
 		slot = [[5]],
-		muzzleEffectShot = [[custom:BEAMWEAPON_MUZZLE_RED]],
+		muzzleEffectShot = [[BEAMWEAPON_MUZZLE_RED]],
 
 		light_camera_height = 1200,
 		light_radius = 120,

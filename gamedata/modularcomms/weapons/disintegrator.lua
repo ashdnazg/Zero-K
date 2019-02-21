@@ -10,7 +10,7 @@ local weaponDef = {
 	craterMult              = 6,
 
 	customParams            = {
-		muzzleEffectShot = [[custom:ataalaser]],
+		muzzleEffectShot = [[ataalaser]],
 		slot = [[3]],
 		manualfire = 1,
 	},

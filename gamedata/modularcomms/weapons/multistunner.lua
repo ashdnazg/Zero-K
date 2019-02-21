@@ -9,7 +9,7 @@ local weaponDef = {
 	commandFire             = true,
 
 	customParams            = {
-		muzzleEffectShot = [[custom:YELLOW_LIGHTNING_MUZZLE]],
+		muzzleEffectShot = [[YELLOW_LIGHTNING_MUZZLE]],
 		slot = [[3]],
 		manualfire = 1,
 
